@@ -50,7 +50,7 @@ def extract_fourier_descriptors(image):
 
 
 # Load the data
-data = np.load('PATH PLEASE')
+data = np.load('MLProject23/fashion_train.npy')
 X = data[:, :-1]  # Features
 y = data[:, -1]   # Labels
 
