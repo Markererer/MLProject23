@@ -4,7 +4,7 @@ import os
 import shutil
 
 # Load the .npy file
-file_path = r'C:\Users\knedl\Desktop\Uni Things\3 Machine Learning\Project datasets\fashion_train.npy'  # Replace with your .npy file path
+file_path = r'MLProject23/fashion_train.npy'  # Replace with your .npy file path
 
 # Now, let's load the dummy .npy file as if it was the actual dataset
 data = np.load(file_path)
