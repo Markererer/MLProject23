@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from numpy.linalg import eig
 from skimage.feature import local_binary_pattern
 from scipy.stats import skew, kurtosis
 from skimage.feature import hog
@@ -105,16 +106,24 @@ combined_features = np.hstack((contour_features, hog_features, eigenvalue_featur
 scaler = StandardScaler()
 scaled_combined_features = scaler.fit_transform(combined_features)
 
-# Apply PCA
-pca = PCA(n_components=2)
-X_pca = pca.fit_transform(combined_features)
+# Calculate the covariance matrix
+covariance_matrix = np.cov(scaled_combined_features.T)
 
+# Calculate eigenvectors and eigenvalues
+eigenvalues, eigenvectors = eig(covariance_matrix)
+
+# Sort the eigenvectors by decreasing eigenvalues
+eigenvalues_sorted_indices = np.argsort(eigenvalues)[::-1]
+eigenvectors_sorted = eigenvectors[:, eigenvalues_sorted_indices]
+
+# Project the data onto the first two eigenvectors
+X_pca_manual = np.dot(scaled_combined_features, eigenvectors_sorted[:, :2])
 # Apply LDA
 lda = LDA(n_components=2)
 X_lda = lda.fit_transform(combined_features, y)
 
 # Calculate mean points for each class in PCA and LDA space
-mean_points_pca = np.array([np.mean(X_pca[y == label, :], axis=0) for label in np.unique(y)])
+mean_points_pca = np.array([np.mean(X_pca_manual[y == label, :], axis=0) for label in np.unique(y)])
 mean_points_lda = np.array([np.mean(X_lda[y == label, :], axis=0) for label in np.unique(y)])
 
 # Visualization
@@ -122,7 +131,7 @@ plt.figure(figsize=(18, 6))
 
 # PCA Plot
 plt.subplot(1, 3, 1)
-plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, alpha=0.5)
+plt.scatter(X_pca_manual[:, 0], X_pca_manual[:, 1], c=y, alpha=0.5)
 plt.title('PCA Projection')
 plt.xlabel('Principal Component 1')
 plt.ylabel('Principal Component 2')
