@@ -34,3 +34,18 @@ def ExtractFourierDescriptors(image):
         return np.abs(fourier_result[:5])  # You can adjust the number of coefficients
     else:
         return np.zeros(5)  # Return zeros if no contours are found
+
+def CountBlackPixelsInMiddle(image):
+    # Define the region of interest (ROI)
+    x_start, x_end = 12, 16  # Middle region in a 28x28 image
+    y_start, y_end = 0, 28
+    image = image.reshape((28, 28))
+    image = np.uint8(image)
+    roi = image[y_start:y_end, x_start:x_end]
+
+    black_pixels = np.sum(roi == 0)
+
+    # Normalize
+    black_ratio = black_pixels / (4*28)
+
+    return [black_ratio]
