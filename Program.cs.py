@@ -4,6 +4,8 @@ from Features import AvgClassShapes
 from Features import ExtractFeatures
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
 
 def TransformAndExtractFeatures(images, eigenshapes, average_shapes):
@@ -119,8 +121,6 @@ def TransformLDA(data, eigenPairs, show_graph = False, labels = None):
         # Create a scatter plot with colors
         plt.figure(figsize=(10, 8))
         for i, unique_class in enumerate(unique_classes):
-            if unique_class == 4:  # Skip class 4
-                continue
 
             class_mask = (labels == unique_class)
             plt.scatter(transformed_data[class_mask, 0], transformed_data[class_mask, 1], 
@@ -134,6 +134,41 @@ def TransformLDA(data, eigenPairs, show_graph = False, labels = None):
 
     return transformed_data
 
+def VerifyLDA(data, labels, transformed_data, n_discriminant_variables=2):
+    # Initialize sklearn's LDA
+    lda = LinearDiscriminantAnalysis(n_components=n_discriminant_variables)
+
+    # Fit sklearn's LDA model
+    lda.fit(data, labels)
+    sklearn_transformed_data = lda.transform(data)
+
+    # Compare the results
+    #comparison = cosine_similarity(transformed_data, sklearn_transformed_data)
+
+    # Calculate average similarity (optional)
+    #average_similarity = np.mean(comparison)
+
+    # Get unique classes and their corresponding colors
+    unique_classes = np.unique(labels)
+    colors = plt.cm.jet(np.linspace(0, 1, len(unique_classes)))
+    labelNames = { 0:"T-shirt/top", 1:"Trousers", 2:"Pullover", 3:"Dress", 4:"Shirt"}
+
+    # Create a scatter plot with colors
+    plt.figure(figsize=(10, 8))
+    for i, unique_class in enumerate(unique_classes):
+
+        class_mask = (labels == unique_class)
+        plt.scatter(sklearn_transformed_data[class_mask, 0], sklearn_transformed_data[class_mask, 1], 
+                    color=colors[i], label=f'Class {labelNames[unique_class]}', alpha=0.5)
+
+    plt.xlabel('Linear Discriminant 1')
+    plt.ylabel('Linear Discriminant 2')
+    plt.title('LDA - Projection onto the first 2 linear discriminants')
+    plt.legend()
+    plt.show()
+
+    #print(comparison)
+    #print(average_similarity)
 
 def Main():
     train_path = r'fashion_train.npy'
@@ -160,7 +195,9 @@ def Main():
     X_train = TransformPCA(X_train, pca)
 
     ldaEigenPairs = FitLDA(X_train, y_train)
-    X_train = TransformLDA(X_train, ldaEigenPairs, show_graph=True, labels=y_train)
+    X_train_LDA = TransformLDA(X_train, ldaEigenPairs, show_graph=True, labels=y_train)
+
+    VerifyLDA(X_train, y_train, X_train_LDA, 2)
     # TODO: Manual Naive Bayes classifier that uses the first two linear discriminant variables as features
 
 if __name__ == "__main__":
