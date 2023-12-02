@@ -45,6 +45,7 @@ def EvaluateClassifier(y_true, y_pred):
     f1 = f1_score(y_true, y_pred, average='weighted')
 
     # Print the metrics
+    print("Naive Bayes classifier:")
     print(f"Accuracy: {accuracy:.4f}")
     print(f"Precision: {precision:.4f}")
     print(f"Recall: {recall:.4f}")

@@ -5,6 +5,7 @@ from Features import ExtractFeatures
 from Dimensionality import LDA
 from Dimensionality import PCA
 from Classifiers import NaiveBayes
+from Classifiers import SVM
 from sklearn.preprocessing import StandardScaler
 
 def TransformAndExtractFeatures(images, eigenshapes, average_shapes):
@@ -14,7 +15,7 @@ def TransformAndExtractFeatures(images, eigenshapes, average_shapes):
         flattened_image = image.flatten()
         transformed_image = np.dot(flattened_image, eigenshapes)
 
-        # Extract other features
+        ## Extract other features
         features = []
 
         # Pixel differences between this image and the average shape of each class 
@@ -64,16 +65,23 @@ def Main():
 
     # LDA - The 10 principal components are scaled down to 2 linear discriminant variables (as per project requirements)
     # TODO: Check if using more than 2 improves the other two classifiers, where we're not forced to use just two 
-    ldaEigenPairs = LDA.FitLDA(X_train, y_train)
-    X_train_LDA = LDA.TransformLDA(X_train, ldaEigenPairs)
-    X_test_LDA = LDA.TransformLDA(X_test, ldaEigenPairs)
+    #ldaEigenPairs = LDA.FitLDA(X_train, y_train)
+    #X_train_LDA = LDA.TransformLDA(X_train, ldaEigenPairs)
+    #X_test_LDA = LDA.TransformLDA(X_test, ldaEigenPairs)
     #LDA.VerifyLDA(X_train, y_train, X_train_LDA, 2) #Visually the same, except flipped around because of eigenvector direction
     
+    ## Comment out the ones you're not using to save time
     # Manual Naive Bayes classifier that uses the first two linear discriminant variables as features
-    priors, stats = NaiveBayes.FitClassifier(X_train_LDA, y_train)
-    predictions = [NaiveBayes.Classify(instance, priors, stats) for instance in X_test_LDA]
+    #priors, stats = NaiveBayes.FitClassifier(X_train_LDA, y_train)
+    #y_pred = [NaiveBayes.Classify(instance, priors, stats) for instance in X_test_LDA]
 
-    NaiveBayes.EvaluateClassifier(y_test, predictions)
+    #NaiveBayes.EvaluateClassifier(y_test, y_pred)
+
+    # SVM classifier
+    svmClassifier = SVM.FitClassifier(np.real(X_train), y_train)
+    y_pred = svmClassifier.predict(np.real(X_test))
+
+    SVM.EvaluateClassifier(y_test, y_pred)
 
 if __name__ == "__main__":
     Main()
