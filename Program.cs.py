@@ -78,7 +78,7 @@ def Main():
     #NaiveBayes.EvaluateClassifier(y_test, y_pred)
 
     # SVM classifier
-    svmClassifier = SVM.FitClassifier(np.real(X_train), y_train)
+    svmClassifier = SVM.FitClassifier(np.real(X_train), y_train, C=2)
     y_pred = svmClassifier.predict(np.real(X_test))
 
     SVM.EvaluateClassifier(y_test, y_pred)
