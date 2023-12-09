@@ -7,6 +7,7 @@ from Dimensionality import PCA
 from Classifiers import NaiveBayes
 from Classifiers import SVM
 from sklearn.preprocessing import StandardScaler
+from feature_distribution import assess_feature_distribution
 
 def TransformAndExtractFeatures(images, eigenshapes, average_shapes):
     transformed_features = []
@@ -62,6 +63,10 @@ def Main():
     pca = PCA.FitPCA(X_train)
     X_train = PCA.TransformPCA(X_train, pca)
     X_test = PCA.TransformPCA(X_test, pca)
+
+    # Assess feature distribution and capture standard deviations
+    feature_std_devs = assess_feature_distribution(X_train)
+
 
     # LDA - The 10 principal components are scaled down to 2 linear discriminant variables (as per project requirements)
     # TODO: Check if using more than 2 improves the other two classifiers, where we're not forced to use just two 
