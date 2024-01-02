@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import os
 
 # Load the .npy file
-file_path = 'MLProject23/fashion_train.npy'  # Replace with your .npy file path
+file_path = 'fashion_train.npy'  # Replace with your .npy file path
 
 # Load the data
 data = np.load(file_path)

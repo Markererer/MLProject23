@@ -43,8 +43,13 @@ def Main():
     test_path = r'fashion_test.npy'
     data = np.load(train_path)
     X_train, y_train = data[:, :-1], data[:, -1]
+    # Normalize X_train
+    X_train = X_train / 255.0
+
     data = np.load(test_path)
     X_test, y_test = data[:, :-1], data[:, -1]
+    # Normalize X_test
+    X_test = X_test / 255.0
 
     # TODO: A point could be made to save these into a file instead of calculating them every time
     eigenshapes = Eigenshapes.GetEigenShapes(X_train)
