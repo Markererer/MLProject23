@@ -45,12 +45,12 @@ def Main():
     data = np.load(train_path)
     X_train, y_train = data[:, :-1], data[:, -1]
     # Normalize X_train
-    X_train = X_train / 255.0
+    #X_train = X_train / 255.0
 
     data = np.load(test_path)
     X_test, y_test = data[:, :-1], data[:, -1]
     # Normalize X_test
-    X_test = X_test / 255.0
+    #X_test = X_test / 255.0
 
     # TODO: A point could be made to save these into a file instead of calculating them every time
     eigenshapes = Eigenshapes.GetEigenShapes(X_train)
@@ -68,9 +68,9 @@ def Main():
     X_test = scaler.transform(features_test)
 
     # PCA - All features scaled down to the 10 highest variance principal components
-    pca = PCA.FitPCA(X_train)
-    X_train = PCA.TransformPCA(X_train, pca)
-    X_test = PCA.TransformPCA(X_test, pca)
+    #pca = PCA.FitPCA(X_train)
+    #X_train = PCA.TransformPCA(X_train, pca)
+    #X_test = PCA.TransformPCA(X_test, pca)
 
     # Assess feature distribution and capture standard deviations
     #feature_std_devs = assess_feature_distribution(X_train)
