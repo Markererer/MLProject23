@@ -10,6 +10,7 @@ from sklearn.preprocessing import StandardScaler
 #from feature_distribution import assess_feature_distribution
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import f1_score
+from Tools.Plotting import plot_confusion_matrix
 
 def TransformAndExtractFeatures(images, eigenshapes, average_shapes):
     transformed_features = []
@@ -99,6 +100,7 @@ def Main():
     y_pred = svmClassifier.predict(np.real(X_test))
 
     SVM.EvaluateClassifier(y_test, y_pred)
+    plot_confusion_matrix(svmClassifier, np.real(X_test), y_test)
 
 if __name__ == "__main__":
     Main()
