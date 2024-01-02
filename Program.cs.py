@@ -7,7 +7,9 @@ from Dimensionality import PCA
 from Classifiers import NaiveBayes
 from Classifiers import SVM
 from sklearn.preprocessing import StandardScaler
-from feature_distribution import assess_feature_distribution
+#from feature_distribution import assess_feature_distribution
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import f1_score
 
 def TransformAndExtractFeatures(images, eigenshapes, average_shapes):
     transformed_features = []
@@ -22,11 +24,11 @@ def TransformAndExtractFeatures(images, eigenshapes, average_shapes):
         # Pixel differences between this image and the average shape of each class 
         features.append(AvgClassShapes.GetDiffFromAvgShapes(image, average_shapes))
         # Contour features
-        features.append(ExtractFeatures.ExtractContourFeatures(image))
+        #features.append(ExtractFeatures.ExtractContourFeatures(image))
         # Histogram of Oriented Gradients (HOG) features
         features.append(ExtractFeatures.ExtractHOGFeatures(image))
         # Fourier descriptors
-        features.append(ExtractFeatures.ExtractFourierDescriptors(image))
+        #features.append(ExtractFeatures.ExtractFourierDescriptors(image))
         # Ratio of black pixels in the middle (specifically for classifying trousers)
         features.append(ExtractFeatures.CountBlackPixelsInMiddle(image))
 
@@ -65,11 +67,9 @@ def Main():
     X_test = PCA.TransformPCA(X_test, pca)
 
     # Assess feature distribution and capture standard deviations
-    feature_std_devs = assess_feature_distribution(X_train)
-
+    #feature_std_devs = assess_feature_distribution(X_train)
 
     # LDA - The 10 principal components are scaled down to 2 linear discriminant variables (as per project requirements)
-    # TODO: Check if using more than 2 improves the other two classifiers, where we're not forced to use just two 
     #ldaEigenPairs = LDA.FitLDA(X_train, y_train)
     #X_train_LDA = LDA.TransformLDA(X_train, ldaEigenPairs)
     #X_test_LDA = LDA.TransformLDA(X_test, ldaEigenPairs)
@@ -81,6 +81,13 @@ def Main():
     #y_pred = [NaiveBayes.Classify(instance, priors, stats) for instance in X_test_LDA]
 
     #NaiveBayes.EvaluateClassifier(y_test, y_pred)
+
+    # Sklearn implementation to compare the results to
+    #gnb = GaussianNB()
+    #gnb.fit(np.real(X_train_LDA), y_train)
+    #y_pred = gnb.predict(np.real(X_test_LDA))
+    #f1 = f1_score(y_test, y_pred, average='weighted')
+    #print(f"F1 Score: {f1}")
 
     # SVM classifier
     svmClassifier = SVM.FitClassifier(np.real(X_train), y_train, C=2)
