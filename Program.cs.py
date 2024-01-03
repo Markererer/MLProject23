@@ -53,8 +53,9 @@ def Main():
     #X_test = X_test / 255.0
 
     # TODO: A point could be made to save these into a file instead of calculating them every time
-    eigenshapes = Eigenshapes.GetEigenShapes(X_train)
+    eigenshapes = Eigenshapes.GetEigenShapes(X_train, plot=True)
     average_shapes = AvgClassShapes.GetAvgClassShapes(X_train, y_train)
+    #AvgClassShapes.DisplayImages(average_shapes)    
 
     # Extract features and fit the data to match the Eigenshapes extracted (784 pixels transformed into 50 principal components)
     features_train = TransformAndExtractFeatures(X_train, eigenshapes, average_shapes)
