@@ -37,7 +37,7 @@ def neural_network():
     # Compile the model
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-        # Train the model and record the history
+    # Train the model and record the history
     history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=12)
 
     # Evaluate the model
@@ -47,4 +47,4 @@ def neural_network():
     return model, history
 
 
-
+neural_network()
