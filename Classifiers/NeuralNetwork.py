@@ -2,7 +2,7 @@ import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D
 from tensorflow.keras.utils import to_categorical
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_score, accuracy_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -37,14 +37,25 @@ def neural_network():
     # Compile the model
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-    # Train the model and record the history
-    history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=12)
+    # Train the model
+    model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=12)
 
-    # Evaluate the model
-    loss, accuracy = model.evaluate(X_test, y_test)
-    print(f"Test accuracy: {accuracy * 100:.2f}%")
+    # Predict class labels for the test set
+    y_pred = model.predict(X_test)
+    y_pred_classes = np.argmax(y_pred, axis=1)
+    y_true_classes = np.argmax(y_test, axis=1)
 
-    return model, history
+    # Calculate metrics
+    precision = precision_score(y_true_classes, y_pred_classes, average='weighted')
+    recall = recall_score(y_true_classes, y_pred_classes, average='weighted')
+    f1 = f1_score(y_true_classes, y_pred_classes, average='weighted')
+    accuracy = accuracy_score(y_true_classes, y_pred_classes)
 
+    print(f"Precision: {precision:.2f}")
+    print(f"Recall: {recall:.2f}")
+    print(f"F1 Score: {f1:.2f}")
+    print(f"Accuracy: {accuracy:.2f}")
 
-neural_network()
+    return model
+
+model = neural_network()
